@@ -13,23 +13,25 @@ npm i form-reader
   const FormReader = require('form-reader')
   // setup custom headers for every request
   formReader.willSendRequest(opts => merge(opts, {
-      headers: {
-        'User-Agent': userAgent,
-        cookie,
-      }
-    }))
+   headers: {
+    'User-Agent': userAgent,
+    cookie,
+   }
+  }))
   const response = await formReader
-      .readFrom('https://mbasic.facebook.com/groups/1244011002355014')
-      .formAt(1)
-      // inject your data and chose your custom submit action
-      .willSubmit((requiredFields, submitFields) => {
-        const { view_photo } = submitFields
-        return {
-          ...requiredFields,
-          view_photo,
-        }
-      })
-      .submit()
+   .readFrom('https://mbasic.facebook.com/groups/1244011002355014')
+   .formAt(1)
+   // inject your data and chose your custom submit action
+   .willSubmit((requiredFields, submitFields) => {
+    const {
+     view_photo
+    } = submitFields
+    return {
+     ...requiredFields,
+     view_photo,
+    }
+   })
+   .submit()
 ```
 
 ## 3. Examples
