@@ -1,20 +1,25 @@
 const FormParser = require('./formParser')
 const Transporter = require('./transporter')
 const FormCache = require('./formCache')
+const FormPipeline = require('./formPipeline')
 
 class FormReader {
   constructor(formOptions = {}) {
-    const { useCache } = formOptions
-    this.opts = {}
-    this.extendOptions = () => this.opts 
+    const { useCache, willSendRequest } = formOptions
+    this.extendOptions = () => {} 
     this.cache = new FormCache()
     this.useCache = useCache
+    this.willSendRequest(willSendRequest)
   }
-  willSendRequest(f) {
-    f && (this.extendOptions = f)
+  willSendRequest(f = {}) {
+    if (typeof f === 'function') {
+      this.extendOptions = () => f() || {} 
+    } else {
+      this.extendOptions = () => f 
+    }
   }
   readFrom(url) {
-    const options = this.extendOptions(this.opts)
+    const options = this.extendOptions()
     const transporter = new Transporter({
       url,
       options,
@@ -22,6 +27,12 @@ class FormReader {
       useCache: this.useCache,
     })
     return new FormParser(transporter)
+  }
+  pipeline(steps) {
+    return new FormPipeline({
+      formReader: this,
+      steps, 
+    })
   }
 }
 

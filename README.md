@@ -12,6 +12,7 @@ npm i form-reader
 ```javascript
   const FormReader = require('form-reader')
   // setup custom headers for every request
+  const URL = 'https://mbasic.facebook.com/groups/1244011002355014' 
   formReader.willSendRequest(opts => merge(opts, {
    headers: {
     'User-Agent': userAgent,
@@ -19,17 +20,17 @@ npm i form-reader
    }
   }))
   const response = await formReader
-   .readFrom('https://mbasic.facebook.com/groups/1244011002355014')
+   .readFrom(URL)
    .formAt(1)
    // inject your data and chose your custom submit action
    .willSubmit((requiredFields, submitFields) => {
-    const {
-     view_photo
-    } = submitFields
-    return {
-     ...requiredFields,
-     view_photo,
-    }
+      const {
+       view_photo
+      } = submitFields
+      return {
+       ...requiredFields,
+       view_photo,
+      }
    })
    .submit()
 ```
