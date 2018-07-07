@@ -33,7 +33,6 @@ describe('Pipeline', () => {
             path.join(__dirname, './a.jpg')
           )
         }),
-        nextURL: (response) => response.headers.location,
       },
       {
         formAt: 0, 
@@ -46,7 +45,6 @@ describe('Pipeline', () => {
         nextURL: (response) => response.headers.location,
       }
     ]).startWith(URL).then(() => {
-      console.log('END')
       expect(true).to.equal(true)
     })
   })
