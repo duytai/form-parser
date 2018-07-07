@@ -22,7 +22,7 @@ formReader
         password,
         login: submitFields.login,
       })
-    }
+    },
   ])
   .startWith('https://www.facebook.com/login.php')
   .then(response => {

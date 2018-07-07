@@ -17,6 +17,7 @@ class FormReader {
     } else {
       this.extendOptions = () => f 
     }
+    return this
   }
   readFrom(url) {
     const options = this.extendOptions()

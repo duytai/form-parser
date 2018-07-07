@@ -10,9 +10,15 @@ class FormPipeline {
       const { 
         formAt = 0, 
         willSubmit = _ => {}, 
+        willSendRequest = (response) => this.formReader.extendOptions,
         nextURL = response => response.headers.location 
       } = step
-      return { formAt, willSubmit, nextURL }
+      return { 
+        formAt, 
+        willSubmit, 
+        nextURL,
+        willSendRequest,
+      }
     })
   }
   async startWith(url) {
@@ -20,9 +26,10 @@ class FormPipeline {
     let goURL = url
     let response = null
     for (let i = 0; i < this.steps.length; i++) {
-      const { formAt, willSubmit, nextURL } = this.steps[i]
+      const { formAt, willSubmit, nextURL, willSendRequest } = this.steps[i]
       response = await this
         .formReader
+        .willSendRequest(willSendRequest(response))
         .readFrom(goURL)
         .formAt(formAt)
         .willSubmit(willSubmit)
