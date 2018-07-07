@@ -19,9 +19,11 @@ class FormParser {
   async submit() {
     const { body } = await this.transporter.get()
     const $ = cheerio.load(body)
+    if (!$('form').length) throw new Error('Form is not found') 
     const form = $('form').eq(this.formIndex)
     const action = form.attr('action')
-    const inputs = form.find('input, textarea')
+    if (!action) throw new Error('There is not action')
+    const inputs = form.find('input, textarea, button')
     const requiredFields = {}
     const submitFields = {}
     for (let i = 0; i < inputs.length; i++) {
@@ -29,10 +31,12 @@ class FormParser {
       const name = input.attr('name')
       const value = input.attr('value') || ''
       const type = input.attr('type')
-      if (type === 'submit') {
-        submitFields[name] = value
-      } else {
-        requiredFields[name] = value
+      if (name) {
+        if (type === 'submit') {
+          submitFields[name] = value
+        } else {
+          requiredFields[name] = value
+        }
       }
     }
     const formData = this.willSubmitCallback(requiredFields, submitFields)
