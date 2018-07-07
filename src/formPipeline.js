@@ -27,6 +27,7 @@ class FormPipeline {
     let response = null
     for (let i = 0; i < this.steps.length; i++) {
       const { formAt, willSubmit, nextURL, willSendRequest } = this.steps[i]
+      if (!goURL) throw new Error(`There is not URL`)
       response = await this
         .formReader
         .willSendRequest(willSendRequest(response))
