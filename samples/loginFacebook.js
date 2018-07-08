@@ -16,28 +16,34 @@ formReader
     {
       willSubmit: (requiredFields, submitFields) => ({
         ...requiredFields,
-        ...submitFields,
         email,
-        password,
+        pass: password,
         login: submitFields.login,
       }),
-      nextURL: () => 'https://m.facebook.com/?soft=composer',
+      nextURL: response => response.headers.location,
     },
-    //{
-      //willSendRequest: response => ({
-        //headers: {
-          //'User-Agent': userAgent,
-          //Cookie: response.headers['set-cookie'][0],
-        //}
-      //}),
-      //willSubmit: (requiredFields, submitFields) => ({
-        //...requiredFields,
-        //...submitFields,
-        //status: 'Hi all',
-      //})
-    //}
+    {
+      formAt: 1,
+      willSendRequest: response => {
+        const cookies = response.headers['set-cookie']
+        const cookieData = cookies
+          .map(cookie => cookie.split(';')[0])
+          .join('&')
+        return {
+          headers: {
+            'User-Agent': userAgent,
+            Cookie: cookieData,
+          },
+        }
+      },
+      willSubmit: (requiredFields, submitFields) => ({
+        ...requiredFields,
+        xc_message: 'Hello From Bot',
+        view_post: submitFields.view_post,
+      })
+    }
   ])
-  .startWith('https://m.facebook.com/login')
+  .startWith('https://mbasic.facebook.com/login')
   .then(response => {
     console.log(response.headers)
     fs.writeFileSync('a.html', response.body, 'utf8')

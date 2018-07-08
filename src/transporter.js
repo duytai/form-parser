@@ -13,9 +13,18 @@ class Transporter {
   }
   async submit (action, formData) {
     const { origin } = new URL(this.url)
-    let finalURL = action.indexOf('/') === 0 
-      ? urlJoin(origin, action)
-      : urlJoin(this.url, action)
+    let finalURL = null 
+    switch (true) {
+      case action.indexOf('/') === 0:
+        finalURL = urlJoin(origin, action) 
+        break
+      case action.indexOf('http') === 0:
+        finalURL = action
+        break
+      default:
+        finalURL = urlJoin(this.url, action)
+        break
+    }
     const [ response ] = await Q.nfcall(request, {
       url: finalURL,
       method: 'POST',
