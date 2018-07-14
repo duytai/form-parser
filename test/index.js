@@ -6,7 +6,6 @@ const { FormReader } = require('../')
 
 const { userAgent, cookie } = JSON.parse(process.env.SETTINGS)
 describe('# Form reader', () => {
-  return
   it('Allow remove cache', async () => {
     const formReader = new FormReader({ useCache: true })
     formReader

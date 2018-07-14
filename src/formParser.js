@@ -35,7 +35,13 @@ class FormParser {
         if (type === 'submit') {
           submitFields[name] = value
         } else {
-          requiredFields[name] = value
+          if (/\[\]$/.test(name)) {
+            const newName = name.slice(0, name.length - 2)
+            if (!submitFields[newName]) submitFields[newName] = []
+            submitFields[newName].push(value)
+          } else {
+            requiredFields[name] = value
+          }
         }
       }
     }

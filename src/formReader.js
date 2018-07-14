@@ -19,7 +19,7 @@ class FormReader {
     }
     return this
   }
-  readFrom(url) {
+  getTransporter(url) {
     const options = this.extendOptions()
     const transporter = new Transporter({
       url,
@@ -27,6 +27,10 @@ class FormReader {
       cache: this.cache,
       useCache: this.useCache,
     })
+    return transporter
+  }
+  readFrom(url) {
+    const transporter = this.getTransporter(url)
     return new FormParser(transporter)
   }
   pipeline(steps) {
