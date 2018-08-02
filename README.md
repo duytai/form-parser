@@ -50,7 +50,7 @@ await this.formReader.pipeline([
   formAt: 1,
   willSubmit: (requiredFields, submitFields) => ({
     ...requiredFields,
-    xc_message: message,
+    xc_message: <YOUR_MESSAGE>,
     view_post: submitFields.view_post,
   }),
   },
