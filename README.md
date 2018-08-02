@@ -1,13 +1,13 @@
 # Form-parser
-`form-reader` is a part of bigger project aiming to support Unofficial Facebook Graph. It allows you to submit your custom data to every facebook form.
+`form-reader` is a part of a bigger project aiming to support Unofficial Facebook Graph. It allows you to submit your custom data to every facebook form.
 
-## 1. Installation 
+## Installation 
 
 ```bash
 npm i form-reader
 ```
 
-## 2. Usage
+## Usage
 You can login facebook with your own account get a valid cookie for later use. __Notice__: won't work with 2-factor authen accounts.
 
 ```javascript
@@ -52,7 +52,39 @@ await this.formReader.pipeline([
     ...requiredFields,
     xc_message: message,
     view_post: submitFields.view_post,
-    }),
+  }),
   },
 ]).startWith('https://mbasic.facebook.com/')
+```
+## Initialize
+
+```javascript
+const formReader = new FormReader(options)
+```
+`options` is an object, it contains properties:
+
+- `useCache` - use your `url` to cache http request (`type`: `bool`, `default`: `false`)
+- `willSendRequest` - pass to option of [request](https://github.com/request/request#requestoptions-callback) (`type`: `<object|function>`, `default`: `{}`)
+
+## Pipeline
+
+You can create a sequence of form submits by using pipeline
+
+```javascript
+formReader.pipeline([stage1, stage2, ...]).start(URL)
+```
+a `stage` must contains properties
+
+- `formAt` - position of form (`type`: `int`, `default`: `0`)
+- `willSubmit` - provide all fields of form in `requiredFields` and posible submit actions in `submitFields`
+- `willSendRequest` - provide `response` from previous request, which help you to decide `url`, `headers`, ... of next stage
+- `nextURL` - provide `response` from previous request, has to return a `url` for next step
+
+## Transpoter
+
+If you want to keep the same `headers` of a previous step to `crawle` data from other page then using 
+
+```javascript
+  const transporter = formReader.getTransporter(URL)
+  const response = await transporter.get()
 ```
